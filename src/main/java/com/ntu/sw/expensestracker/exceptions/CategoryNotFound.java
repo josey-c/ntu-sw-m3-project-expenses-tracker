@@ -1,0 +1,7 @@
+package com.ntu.sw.expensestracker.exceptions;
+
+public class CategoryNotFound extends RuntimeException {
+    public CategoryNotFound(Long id) {
+        super("Category with Id: " + id + " does not exist");
+    }
+}
