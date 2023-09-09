@@ -1,4 +1,4 @@
-package com.ntu.sw.expensestracker;
+package com.ntu.sw.expensestracker.entity;
 
 import lombok.Getter;
 import lombok.Setter;
