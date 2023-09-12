@@ -18,15 +18,14 @@ import com.ntu.sw.expensestracker.entity.User;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
 import com.ntu.sw.expensestracker.services.UserService;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
-
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
 
     //get 1 user
     @GetMapping("/{id}")
