@@ -1,5 +1,9 @@
 package com.ntu.sw.expensestracker.repo;
 
-public class UserRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ntu.sw.expensestracker.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long>{
     
 }
