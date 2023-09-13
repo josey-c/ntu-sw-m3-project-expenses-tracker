@@ -25,11 +25,12 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/categories") 
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category newCategory = categoryService.createCategory(category);
+    @PostMapping("users/{userId}/categories") 
+    public ResponseEntity<Category> createCategory(@PathVariable Long userId, @RequestBody Category category) {
+        Category newCategory = categoryService.createCategory(userId, category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategory() {
@@ -37,9 +38,15 @@ public class CategoryController {
         return new ResponseEntity<>(allCategory, HttpStatus.OK);
     }
 
-    @PutMapping("/categories/{id}")
-    public ResponseEntity<Category> editCategory(@PathVariable Long id, @RequestBody Category category) {
-        Category editCategory = categoryService.updateCategory(id, category);
+    @GetMapping("users/{userId}/categories")
+    public ResponseEntity<List<Category>> getAllCategoryByUser(@PathVariable Long userId) {
+        List<Category> allCategoryByUser = categoryService.getAllCategoryByUser(userId);
+        return new ResponseEntity<>(allCategoryByUser, HttpStatus.OK);
+    }
+
+    @PutMapping("users/{userId}/categories/{id}")
+    public ResponseEntity<Category> editCategory(@PathVariable Long userId, @PathVariable Long id, @RequestBody Category category) {
+        Category editCategory = categoryService.updateCategory(userId, id, category);
         return new ResponseEntity<Category>(editCategory, HttpStatus.OK);
     }
 
