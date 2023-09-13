@@ -5,8 +5,9 @@ import java.util.List;
 import com.ntu.sw.expensestracker.entity.Category;
 
 public interface CategoryService {
-    Category createCategory(Category category);
+    Category createCategory(Long userId, Category category);
     List<Category> getAllCategory();
-    Category updateCategory(Long id, Category category);
+    List<Category> getAllCategoryByUser(Long userId);
+    Category updateCategory(Long userId, Long id, Category category);
     void deleteCategory(Long id);
 }
