@@ -1,6 +1,9 @@
 package com.ntu.sw.expensestracker.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntu.sw.expensestracker.entity.User;
+import com.ntu.sw.expensestracker.entity.Wallet;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
 import com.ntu.sw.expensestracker.services.UserService;
 
@@ -68,4 +72,14 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    //add wallet to user
+    @PostMapping("/{id}/wallet")
+    public ResponseEntity<Wallet> addWalletToUser(@Valid @PathVariable long id,
+    @Valid @RequestBody Wallet wallet) {
+        Wallet newWallet = userService.addWalletToUser(id, wallet);
+        return new ResponseEntity<>(newWallet, HttpStatus.OK);
+    }
+
+   
 }

@@ -35,9 +35,11 @@ public class User {
     @Email(message = "Email should be valid")
     private String email;
 
-
     @OneToMany(mappedBy = "user")
     private List<Category> categories;
+
+    @OneToMany(mappedBy = "user")
+    private List<Wallet> wallets;
 
     public User() {
     }

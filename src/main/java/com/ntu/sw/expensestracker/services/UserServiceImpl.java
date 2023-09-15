@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ntu.sw.expensestracker.entity.User;
+import com.ntu.sw.expensestracker.entity.Wallet;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
 import com.ntu.sw.expensestracker.repo.UserRepository;
+import com.ntu.sw.expensestracker.repo.WalletRepository;
 
 @Service
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
+    private WalletRepository walletRepository;
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository){
+    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository){
         this.userRepository= userRepository;
+        this.walletRepository = walletRepository;
     }
     
     //create 1 user
@@ -64,5 +68,18 @@ public class UserServiceImpl implements UserService{
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
-    
+
+    //add wallet to user
+    @Override
+    public Wallet addWalletToUser(long id, Wallet wallet){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User selectedUser = optionalUser.get();
+            wallet.setUser(selectedUser);
+            String walletName = wallet.getWalletName();
+            wallet.setWalletName(walletName);
+            return walletRepository.save(wallet);
+        }
+        throw new UserNotFoundException(id);
+    }
 }
