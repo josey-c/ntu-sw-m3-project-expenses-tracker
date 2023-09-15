@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -36,4 +37,6 @@ public class Category {
     @JoinColumn(name = "user_id", referencedColumnName = "userid")
     private User user;
 
+    @OneToOne(mappedBy = "category")
+    private Expense expense;
 }
