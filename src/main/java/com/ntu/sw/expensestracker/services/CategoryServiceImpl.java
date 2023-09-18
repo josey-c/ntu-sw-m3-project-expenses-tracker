@@ -12,9 +12,15 @@ import com.ntu.sw.expensestracker.exceptions.CategoryAlreadyExist;
 import com.ntu.sw.expensestracker.exceptions.CategoryNotFound;
 import com.ntu.sw.expensestracker.repo.CategoryRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Primary
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
+    private final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
+
 
     @Autowired
     public CategoryServiceImpl (CategoryRepository categoryRepository) {
@@ -26,14 +32,17 @@ public class CategoryServiceImpl implements CategoryService {
         // Prevent creation of category with the same name
         List<Category> result = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
         if (result.isEmpty()) {
+            logger.info("🟢 CategoryServiceImpl.createCategory() called");
             Category newCategory = categoryRepository.save(category);
             return newCategory;
         }
+        logger.info("🔴 CategoryServiceImpl.createCategory() failed to call");
         throw new CategoryAlreadyExist(category.getCategoryName());
     }
 
     @Override
     public List<Category> getAllCategory() {
+        logger.info("🟢 CategoryServiceImpl.getAllCategory() called");
         return categoryRepository.findAll();
     }
 
@@ -42,6 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
         // Prevent updating of a category to have a same name with an existing category
         List<Category> result = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
         if (result.isEmpty()) {
+            logger.info("🟢 CategoryServiceImpl.updateCategory() called");
             Optional<Category> optionalCategory = categoryRepository.findById(id);
             if (optionalCategory.isPresent()) {
                 Category categoryToUpdate = optionalCategory.get();
@@ -50,11 +60,13 @@ public class CategoryServiceImpl implements CategoryService {
             }
             throw new CategoryNotFound(id);
         }
+        logger.info("🔴 CategoryServiceImpl.updateCategory() failed");
         throw new CategoryAlreadyExist(category.getCategoryName());
     }
 
     @Override
     public void deleteCategory(Long id) {
+        logger.info("🟢 CategoryServiceImpl.deleteCategory() called");
         categoryRepository.deleteById(id);
     }
     
