@@ -1,78 +1,58 @@
 package com.ntu.sw.expensestracker.controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ntu.sw.expensestracker.entity.Wallet;
-import com.ntu.sw.expensestracker.exceptions.WalletNotFoundException;
 import com.ntu.sw.expensestracker.services.WalletService;
-import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.springframework.http.ResponseEntity;
-
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 @RestController
-@RequestMapping("/wallets")
 public class WalletController {
-    
-    // call wallet service
-    private WalletService walletService; 
+    private WalletService walletService;
 
-    // GET 1 wallet
-    @GetMapping("/{id}")
-    public ResponseEntity<Wallet> getWallet(@PathVariable Long id){
-        Wallet foundWallet = walletService.getWallet(id); 
-        return new ResponseEntity<>(foundWallet, HttpStatus.OK);
+    @Autowired
+    public WalletController (WalletService walletService) {
+        this.walletService = walletService;
     }
 
-    // GET all wallet
-    @GetMapping("")
-    public ResponseEntity<ArrayList<Wallet>> getAllWallets(){
-        ArrayList<Wallet> allWallets = walletService.getAllWallets();
-        return new ResponseEntity<>(allWallets, HttpStatus.OK); 
-    }
-
-    // CREATE 1 wallet
-    @PostMapping("")
-    public ResponseEntity<Wallet> createWallet(@RequestBody Wallet wallet){
-        return new ResponseEntity<>(walletService.createWallet(wallet), HttpStatus.CREATED); 
-    }
-
-    // UPDATE wallet 
-    @PutMapping("/{id}")
-    public ResponseEntity<Wallet> updateWallet(@PathVariable Long id, @RequestBody Wallet wallet){
-        try{
-            Wallet updatedWallet = walletService.updateWallet(id, wallet); 
-            return new ResponseEntity<>(updatedWallet, HttpStatus.OK);
-        }catch(WalletNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
-        }
-    }
-
-    // DELETE wallet
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Wallet> deleteWallet(@PathVariable Long id){
-        try{
-            walletService.deleteById(id); 
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
-
-        }catch(WalletNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
-        }
+    @PostMapping("users/{userId}/wallets") 
+    public ResponseEntity<Wallet> createWallet(@PathVariable Long userId, @RequestBody Wallet wallet) {
+        Wallet newWallet = walletService.createWallet(userId, wallet);
+        return new ResponseEntity<>(newWallet, HttpStatus.CREATED);
     }
 
 
+    @GetMapping("/wallets")
+    public ResponseEntity<List<Wallet>> getAllWallet() {
+        List<Wallet> allWallet = walletService.getAllWallet();
+        return new ResponseEntity<>(allWallet, HttpStatus.OK);
+    }
+
+    @GetMapping("users/{userId}/wallets")
+    public ResponseEntity<List<Wallet>> getAllWalletByUser(@PathVariable Long userId) {
+        List<Wallet> allWalletByUser = walletService.getAllWalletByUser(userId);
+        return new ResponseEntity<>(allWalletByUser, HttpStatus.OK);
+    }
+
+    @PutMapping("users/{userId}/wallets/{id}")
+    public ResponseEntity<Wallet> editWallet(@PathVariable Long userId, @PathVariable Long id, @RequestBody Wallet wallet) {
+        Wallet editWallet = walletService.updateWallet(userId, id, wallet);
+        return new ResponseEntity<Wallet>(editWallet, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/wallets/{id}")
+    public ResponseEntity<HttpStatus> deleteWallet(@PathVariable Long id) {
+        walletService.deleteWallet(id);
+        return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
+    }
 
 }

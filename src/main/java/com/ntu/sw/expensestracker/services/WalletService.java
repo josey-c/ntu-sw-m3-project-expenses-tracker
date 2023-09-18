@@ -1,16 +1,13 @@
 package com.ntu.sw.expensestracker.services;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.ntu.sw.expensestracker.entity.Wallet;
 
 public interface WalletService {
-
-    Wallet createWallet(Wallet wallet); 
-    Wallet getWallet(Long id); 
-    ArrayList<Wallet> getAllWallets();
-    Wallet updateWallet(Long id, Wallet wallet); 
-    void deleteById(Long id); 
-    
-    
+    Wallet createWallet(Long userId, Wallet wallet);
+    List<Wallet> getAllWallet();
+    List<Wallet> getAllWalletByUser(Long userId);
+    Wallet updateWallet(Long userId, Long id, Wallet wallet);
+    void deleteWallet(Long id);
 }
