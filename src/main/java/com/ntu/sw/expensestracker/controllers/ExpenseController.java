@@ -28,9 +28,9 @@ public class ExpenseController {
     // CREATE
     @PostMapping("users/{userId}/wallets/{walletId}/expenses")
     public ResponseEntity<Expense> createExpense(@PathVariable Long userId, @PathVariable Long walletId,
-            @RequestBody Expense expense) {
-        System.out.println("JSON recieved! 🟢" + expense);
-        Expense newExpense = expenseService.createExpense(userId, walletId, expense);
+            @RequestBody RequestBodyTempData data) {
+        System.out.println("JSON recieved! 🟢" + data.getExpense());
+        Expense newExpense = expenseService.createExpense(userId, walletId, data.getCategoryNum(), data.getExpense());
         return new ResponseEntity<>(newExpense, HttpStatus.CREATED);
     }
 
@@ -42,9 +42,9 @@ public class ExpenseController {
     }
 
     // READ ALL (GET ALL) - by per wallet
-    @GetMapping("/wallets/{walletId}/expenses")
-    public ResponseEntity<List<Expense>> getAllExpenseByWallet(@PathVariable Long walletId) {
-        List<Expense> allExpense = expenseService.getAllExpenseByWallet(walletId);
+    @GetMapping("users/{userId}/wallets/{walletId}/expenses")
+    public ResponseEntity<List<Expense>> getAllExpenseByWallet(@PathVariable Long userId, @PathVariable Long walletId) {
+        List<Expense> allExpense = expenseService.getAllExpenseByWallet(userId, walletId);
         return new ResponseEntity<>(allExpense, HttpStatus.OK);
     }
 
@@ -56,10 +56,9 @@ public class ExpenseController {
     }
 
     // UPDATE
-    @PutMapping("/wallets/{walletId}/expenses/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long walletId, @PathVariable Long id,
-            @RequestBody Expense expense) {
-        Expense updatedExpense = expenseService.updateExpense(walletId, id, expense);
+    @PutMapping("users/{userId}/wallets/{walletId}/expenses/{id}")
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id, @RequestBody Expense expense) {
+        Expense updatedExpense = expenseService.updateExpense(userId, walletId, id, expense);
         return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
 
@@ -70,4 +69,16 @@ public class ExpenseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+}
+
+class RequestBodyTempData {
+    Expense expense;
+    int categoryNum;
+
+    public Expense getExpense() {
+        return expense;
+    }
+    public int getCategoryNum() {
+        return categoryNum;
+    }
 }
