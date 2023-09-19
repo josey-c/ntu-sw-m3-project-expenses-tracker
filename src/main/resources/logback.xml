@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Define a Console Appender -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <!-- Define the log message format -->
+      <encoder>
+          <pattern>
+              %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+          </pattern>
+      </encoder>
+  </appender>
+  <!-- Define a File Appender -->
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <!-- Specify path to log file -->
+    <file>logs/application.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Set root log level to "INFO" -->
+  <root level="INFO">
+    <!-- Reference the "CONSOLE" appender for console output -->
+    <appender-ref ref="CONSOLE"/>
+    <!-- Reference the "FILE" appender for file output -->
+    <appender-ref ref="FILE" />
+  </root>
+
+    <!-- Disable HikariCP logs -->
+    <logger name="com.zaxxer.hikari" level="OFF" />
+
+    <!-- Disable Catalina utility logs -->
+    <logger name="org.apache.catalina" level="OFF" />
+
+</configuration>
