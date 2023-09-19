@@ -37,6 +37,8 @@ public class Category {
     @JoinColumn(name = "user_id", referencedColumnName = "userid")
     private User user;
 
-    @OneToOne(mappedBy = "category")
+    // @JsonBackReference
+    @OneToOne(optional = false)
+    @JoinColumn(name = "expense_id", referencedColumnName = "id")
     private Expense expense;
 }

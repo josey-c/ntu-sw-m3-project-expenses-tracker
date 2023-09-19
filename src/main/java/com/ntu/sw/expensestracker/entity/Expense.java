@@ -8,8 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,10 +35,14 @@ public class Expense {
     private String description;
 
     @Column(name = "amount")
-    private Long amount;
+    private Double amount;
 
-    @OneToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    @JsonBackReference
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "walletId")
+    private Wallet wallet;
+
+    // @OneToOne(mappedBy = "expense")
+    // private Category category;
 
 }
