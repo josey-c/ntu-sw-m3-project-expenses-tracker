@@ -20,41 +20,51 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/expenses")
+// @RequestMapping("/expenses")
 public class ExpenseController {
 
     private ExpenseService expenseService;
 
     // CREATE
-    @PostMapping("")
-    public ResponseEntity<Expense> createExpense(@RequestBody Expense expense) {
-        Expense newExpense = expenseService.createExpense(expense);
+    @PostMapping("users/{userId}/wallets/{walletId}/expenses")
+    public ResponseEntity<Expense> createExpense(@PathVariable Long userId, @PathVariable Long walletId,
+            @RequestBody Expense expense) {
+        System.out.println("JSON recieved! 🟢" + expense);
+        Expense newExpense = expenseService.createExpense(userId, walletId, expense);
         return new ResponseEntity<>(newExpense, HttpStatus.CREATED);
     }
 
     // READ ALL (GET ALL)
-    @GetMapping("")
+    @GetMapping("/expenses")
     public ResponseEntity<List<Expense>> getAllExpense() {
         List<Expense> allExpense = expenseService.getAllExpense();
         return new ResponseEntity<>(allExpense, HttpStatus.OK);
     }
 
+    // READ ALL (GET ALL) - by per wallet
+    @GetMapping("/wallets/{walletId}/expenses")
+    public ResponseEntity<List<Expense>> getAllExpenseByWallet(@PathVariable Long walletId) {
+        List<Expense> allExpense = expenseService.getAllExpenseByWallet(walletId);
+        return new ResponseEntity<>(allExpense, HttpStatus.OK);
+    }
+
     // READ ONE (GET ONE)
-    @GetMapping("{id}")
+    @GetMapping("/expenses/{id}")
     public ResponseEntity<Expense> getExpense(@PathVariable Long id) {
         Expense foundExpense = expenseService.getExpense(id);
         return new ResponseEntity<>(foundExpense, HttpStatus.OK);
     }
 
     // UPDATE
-    @PutMapping("{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, Expense expense) {
-        Expense updatedExpense = expenseService.updateExpense(id, expense);
+    @PutMapping("/wallets/{walletId}/expenses/{id}")
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long walletId, @PathVariable Long id,
+            @RequestBody Expense expense) {
+        Expense updatedExpense = expenseService.updateExpense(walletId, id, expense);
         return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
 
     // DELETE
-    @DeleteMapping("{id}")
+    @DeleteMapping("/expenses/{id}")
     public ResponseEntity<HttpStatus> deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

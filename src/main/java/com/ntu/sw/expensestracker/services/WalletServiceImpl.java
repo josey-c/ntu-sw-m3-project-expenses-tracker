@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ntu.sw.expensestracker.entity.Expense;
 import com.ntu.sw.expensestracker.entity.User;
 import com.ntu.sw.expensestracker.entity.Wallet;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
 import com.ntu.sw.expensestracker.exceptions.WalletAlreadyExist;
 import com.ntu.sw.expensestracker.exceptions.WalletNotFoundException;
+import com.ntu.sw.expensestracker.repo.ExpenseRepository;
 import com.ntu.sw.expensestracker.repo.UserRepository;
 import com.ntu.sw.expensestracker.repo.WalletRepository;
 
@@ -23,13 +25,16 @@ public class WalletServiceImpl implements WalletService {
     // constructor inject walletRepository
     private WalletRepository walletRepository;
     private UserRepository userRepository;
+    private ExpenseRepository expenseRepository;
 
     private final Logger logger = LoggerFactory.getLogger(WalletServiceImpl.class);
 
     @Autowired
-    public WalletServiceImpl(WalletRepository walletRepository, UserRepository userRepository) {
+    public WalletServiceImpl(WalletRepository walletRepository, UserRepository userRepository,
+            ExpenseRepository expenseRepository) {
         this.walletRepository = walletRepository;
         this.userRepository = userRepository;
+        this.expenseRepository = expenseRepository;
     }
 
     // CREATE 1 wallet
@@ -108,5 +113,19 @@ public class WalletServiceImpl implements WalletService {
             }
         }
         return false;
+    }
+
+    // Add expense to wallet
+    @Override
+    public Expense addExpenseToWallet(Long id, Expense expense) {
+        Optional<Wallet> optionalWallet = walletRepository.findById(id);
+        if (optionalWallet.isPresent()) {
+            logger.info("🟢 WalletServiceImpl.addExpenseToWallet() called");
+            Wallet selectedWallet = optionalWallet.get();
+            expense.setWallet(selectedWallet);
+            return expenseRepository.save(expense);
+        }
+        logger.info("🔴 WalletServiceImpl.addExpenseToWallet() failed");
+        throw new WalletNotFoundException(id);
     }
 }

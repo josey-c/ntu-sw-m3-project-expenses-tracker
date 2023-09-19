@@ -7,16 +7,18 @@ import com.ntu.sw.expensestracker.entity.Expense;
 public interface ExpenseService {
 
     // CREATE
-    Expense createExpense(Expense expense);
+    Expense createExpense(Long userId, Long walletId, Expense expense);
 
     // READ ALL (GET ALL)
     List<Expense> getAllExpense();
+
+    List<Expense> getAllExpenseByWallet(Long walletId);
 
     // READ ONE (GET ONE)
     Expense getExpense(Long id);
 
     // UPDATE
-    Expense updateExpense(Long id, Expense expense);
+    Expense updateExpense(Long walletId, Long id, Expense expense);
 
     // DELETE
     void deleteExpense(Long id);
