@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -42,7 +41,9 @@ public class Expense {
     @JoinColumn(name = "wallet_id", referencedColumnName = "walletId")
     private Wallet wallet;
 
-    // @OneToOne(mappedBy = "expense")
-    // private Category category;
+    // @JsonBackReference
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
+    private Category category;
 
 }

@@ -1,6 +1,7 @@
 package com.ntu.sw.expensestracker.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import com.ntu.sw.expensestracker.entity.Category;
 import com.ntu.sw.expensestracker.entity.User;
 import com.ntu.sw.expensestracker.entity.Wallet;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
@@ -28,7 +30,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository){
+    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository, CategoryService categoryService){
         this.userRepository= userRepository;
         this.walletRepository = walletRepository;
     }
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user){
         logger.info("🟢 UserServiceImpl.createUser() called");
         User newUser = userRepository.save(user);
+        // categoryService.createCategory(newUser.getId(), categories.get(0));
         return newUser;
     }
 

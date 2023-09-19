@@ -37,6 +37,6 @@ public class Wallet {
     private User user;
 
     @OneToMany(mappedBy = "wallet")
-    private List<Expense> expense;
+    private List<Expense> expenses;
 
 }
