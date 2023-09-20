@@ -11,6 +11,7 @@ import com.ntu.sw.expensestracker.entity.Category;
 import com.ntu.sw.expensestracker.entity.User;
 import com.ntu.sw.expensestracker.exceptions.CategoryAlreadyExist;
 import com.ntu.sw.expensestracker.exceptions.CategoryNotFound;
+import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
 import com.ntu.sw.expensestracker.repo.CategoryRepository;
 import com.ntu.sw.expensestracker.repo.UserRepository;
 
@@ -33,17 +34,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category createCategory(Long userId, Category category) {
         logger.info("🟢 CategoryServiceImpl.createCategory() called");
-        User currentUser = userRepository.findById(userId).get();
-        category.setUser(currentUser);
-        category.setCategoryNum(currentUser.getCategories().size() + 1);
-        category.setCategoryName(category.getCategoryName().toLowerCase());
-        // Prevent creation of category with the same name
-        if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
-            logger.info("🔴 CategoryServiceImpl.createCategory() failed to call");
-            throw new CategoryAlreadyExist(category.getCategoryName());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            category.setUser(currentUser);
+            category.setCategoryNum(currentUser.getCategories().size() + 1);
+            category.setCategoryName(category.getCategoryName().toLowerCase());
+            // Prevent creation of category with the same name
+            if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
+                logger.info("🔴 CategoryServiceImpl.createCategory() failed to call");
+                throw new CategoryAlreadyExist(category.getCategoryName());
+            }
+            Category newCategory = categoryRepository.save(category);
+            return newCategory;
         }
-        Category newCategory = categoryRepository.save(category);
-        return newCategory;
+        throw new UserNotFoundException(userId);
     }
 
     @Override

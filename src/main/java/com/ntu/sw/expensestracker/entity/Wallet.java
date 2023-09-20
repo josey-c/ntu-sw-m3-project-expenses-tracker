@@ -39,4 +39,17 @@ public class Wallet {
     @OneToMany(mappedBy = "wallet")
     private List<Expense> expenses;
 
+    public Wallet() {
+
+    }
+
+    public Wallet(String walletName) {
+        this.walletName = walletName;
+    }
+
+    public Wallet(String walletName, User user) {
+        this.walletName = walletName;
+        this.user = user;
+    }
+
 }

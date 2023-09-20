@@ -13,6 +13,7 @@ import com.ntu.sw.expensestracker.entity.Category;
 import com.ntu.sw.expensestracker.entity.User;
 import com.ntu.sw.expensestracker.entity.Wallet;
 import com.ntu.sw.expensestracker.exceptions.UserNotFoundException;
+import com.ntu.sw.expensestracker.repo.CategoryRepository;
 import com.ntu.sw.expensestracker.repo.UserRepository;
 import com.ntu.sw.expensestracker.repo.WalletRepository;
 
@@ -24,15 +25,17 @@ import org.slf4j.LoggerFactory;
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     private WalletRepository walletRepository;
+    private CategoryRepository categoryRepository;
 
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository, CategoryService categoryService){
+    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository, CategoryRepository categoryRepository){
         this.userRepository= userRepository;
         this.walletRepository = walletRepository;
+        this.categoryRepository = categoryRepository;
     }
     
     //create 1 user
@@ -40,7 +43,24 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user){
         logger.info("🟢 UserServiceImpl.createUser() called");
         User newUser = userRepository.save(user);
-        // categoryService.createCategory(newUser.getId(), categories.get(0));
+
+
+        // Add a main wallet to newly created user
+        Wallet main = new Wallet("main", user);
+        walletRepository.save(main);
+        List<Wallet> wallets = Arrays.asList(main);
+        newUser.setWallets(wallets);
+
+        // Add a few categories to newly created user 
+        Category food = new Category("food", 1, user);
+        Category transport = new Category("transport", 2, user);
+        Category bills = new Category("bills", 3, user);
+        categoryRepository.save(food);
+        categoryRepository.save(transport);
+        categoryRepository.save(bills);
+        List<Category> categories = Arrays.asList(food, transport, bills);
+        newUser.setCategories(categories);
+
         return newUser;
     }
 

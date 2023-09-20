@@ -44,5 +44,18 @@ public class Category {
 
     // @OneToMany(mappedBy = "category")
     // private List<Expense> expenses;
+    public Category() {
+
+    }
+
+    public Category (String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Category (String categoryName, int categoryNum, User user) {
+        this.categoryName = categoryName;
+        this.categoryNum = categoryNum;
+        this.user = user;
+    }
 
 }
