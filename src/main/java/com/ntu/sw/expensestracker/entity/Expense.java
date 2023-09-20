@@ -46,4 +46,13 @@ public class Expense {
     @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
     private Category category;
 
+    public Expense() {
+
+    }
+
+    public Expense(String description, Double amount) {
+        this.description = description;
+        this.amount = amount;
+    }
+
 }

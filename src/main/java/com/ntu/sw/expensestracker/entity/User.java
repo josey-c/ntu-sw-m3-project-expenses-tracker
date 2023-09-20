@@ -1,5 +1,6 @@
 package com.ntu.sw.expensestracker.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,6 +43,11 @@ public class User {
     private List<Wallet> wallets;
 
     public User() {
+    }
+
+    public User(String firstName, String email) {
+        this.firstName = firstName;
+        this.email = email;
     }
 
 }

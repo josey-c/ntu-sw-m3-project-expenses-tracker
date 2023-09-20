@@ -89,15 +89,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     // UPDATE
     @Override
-    public Expense updateExpense(Long userId, Long walletId, Long id, Expense expense) {
+    public Expense updateExpense(Long userId, Long walletId, Long id, Expense expense, int categoryNum) {
         logger.info("🟢 ExpenseServiceImpl.updateExpense() called");
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
+            Category category = findCategoryByCategoryNum(currentUser.getCategories(), categoryNum);
             if (optionalWallet.isPresent()) {
                 Wallet currentWallet = CheckIfWalletIsUnderUser(currentUser.getWallets(), walletId);
                 expense.setWallet(currentWallet);
+                expense.setCategory(category);
                 Optional<Expense> optionalExpense = expenseRepository.findById(id);
                 if (optionalExpense.isPresent()) {
                     Expense expenseToUpdate = optionalExpense.get();
@@ -105,6 +107,7 @@ public class ExpenseServiceImpl implements ExpenseService {
                     expenseToUpdate.setDescription(expense.getDescription());
                     expenseToUpdate.setAmount(expense.getAmount());
                     expenseToUpdate.setWallet(expense.getWallet());
+                    expenseToUpdate.setCategory(expense.getCategory());
                     return expenseRepository.save(expenseToUpdate);
                 }
                 throw new ExpenseNotFound(id);

@@ -57,8 +57,8 @@ public class ExpenseController {
 
     // UPDATE
     @PutMapping("users/{userId}/wallets/{walletId}/expenses/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id, @RequestBody Expense expense) {
-        Expense updatedExpense = expenseService.updateExpense(userId, walletId, id, expense);
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id, @RequestBody RequestBodyTempData data) {
+        Expense updatedExpense = expenseService.updateExpense(userId, walletId, id, data.getExpense(), data.getCategoryNum());
         return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
 
