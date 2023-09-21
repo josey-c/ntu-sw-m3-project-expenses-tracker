@@ -50,9 +50,9 @@ public class CategoryController {
         return new ResponseEntity<Category>(editCategory, HttpStatus.OK);
     }
 
-    @DeleteMapping("/categories/{id}")
-    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
+    @DeleteMapping("users/{userId}/categories/{categoryNum}")
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable Long userId, @PathVariable int categoryNum) {
+        categoryService.deleteCategory(userId, categoryNum);
         return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
     }
 
