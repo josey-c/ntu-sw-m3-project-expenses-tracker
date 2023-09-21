@@ -65,32 +65,41 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Long userId, Long id, Category category) {
-        User currentUser = userRepository.findById(userId).get();
         logger.info("🟢 CategoryServiceImpl.updateCategory() called");
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            category.setUser(currentUser);
+            category.setCategoryName(category.getCategoryName().toLowerCase());
+            if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
+                throw new CategoryAlreadyExist(category.getCategoryName());
+            }
+            Optional<Category> optionalCategory = categoryRepository.findById(id);
+            if (optionalCategory.isPresent()) {
+                Category categoryToUpdate = optionalCategory.get();
+                categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
+                logger.error("🔴 CategoryServiceImpl.updateCategory() failed");
 
-        category.setUser(currentUser);
-        category.setCategoryName(category.getCategoryName().toLowerCase());
-        if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
-            throw new CategoryAlreadyExist(category.getCategoryName());
-        }
-        Optional<Category> optionalCategory = categoryRepository.findById(id);
-        if (optionalCategory.isPresent()) {
-            Category categoryToUpdate = optionalCategory.get();
-            categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
+                return categoryRepository.save(categoryToUpdate);
+
+            }
             logger.error("🔴 CategoryServiceImpl.updateCategory() failed");
-
-            return categoryRepository.save(categoryToUpdate);
-
+            throw new CategoryNotFound(id);
         }
-        logger.error("🔴 CategoryServiceImpl.updateCategory() failed");
-
-        throw new CategoryNotFound(id);
+        throw new UserNotFoundException(id);
     }
 
     @Override
-    public void deleteCategory(Long id) {
+    public void deleteCategory(Long userId, int categoryNum) {
         logger.info("🟢 CategoryServiceImpl.deleteCategory() called");
-        categoryRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            Category categoryToDelete = findCategoryByCategoryNum(currentUser.getCategories(), categoryNum);
+            categoryRepository.deleteById(categoryToDelete.getId());
+        } else {
+            throw new UserNotFoundException(userId);
+        }
     }
 
      // Helper function to check if categoryName exist in List of category objects
@@ -102,5 +111,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return false;
     }
+
+    //Helper function to check if category exist 
+    private Category findCategoryByCategoryNum(List<Category> categories, int categoryNum) {
+        for (int i = 0; i < categories.size() ; i++) {
+            if (categories.get(i).getCategoryNum() == categoryNum) {
+                return categories.get(i);
+            }
+        }
+        throw new CategoryNotFound(categoryNum);
+    }
+
 
 }
