@@ -37,6 +37,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     // CREATE
     @Override
     public Expense createExpense(Long userId, Long walletId, int categoryNum, Expense expense) {
+        logger.info("🟢 Creating expense for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
         if (optionalUser.isPresent()) {
@@ -46,51 +47,54 @@ public class ExpenseServiceImpl implements ExpenseService {
                 Wallet currentWallet = CheckIfWalletIsUnderUser(currentUser.getWallets(), walletId);
                 expense.setWallet(currentWallet);
                 expense.setCategory(category);
-                logger.info("🟢 ExpenseServiceImpl.createExpense() called");
+                logger.info("🟢 Successfuly created " + expense.getDescription() + " expense for wallet " + currentWallet.getWalletName() + " under userId: " + userId);
                 return expenseRepository.save(expense);
             }
-            logger.error("🔴 Wallet not found");
+            logger.warn("🟠 Failed to create expense for userId: " + userId);
             throw new WalletNotFoundException(walletId);
         }
+        logger.warn("🟠 Failed to create expense for userId: " + userId);
         throw new UserNotFoundException(userId);
     }
 
     // READ ALL (GET ALL)
     @Override
     public List<Expense> getAllExpense() {
-        logger.info("🟢 ExpenseServiceImpl.getAllExpense() called");
+        logger.info("🟢 Getting all expenses...");
         return expenseRepository.findAll();
     }
 
     // READ ALL (GET ALL) - by per wallet
     @Override
     public List<Expense> getAllExpenseByWallet(Long userId, Long walletId) {
+        logger.info("🟢 Getting all expenses for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
             if (optionalWallet.isPresent()) {
                 Wallet currentWallet = CheckIfWalletIsUnderUser(currentUser.getWallets(), walletId);
-                logger.info("🟢 ExpenseServiceImpl.getAllExpenseByWallet() called");
+                logger.info("🟢 Successfully get all expense for wallet " + currentWallet.getWalletName() + " under userId: " + userId);
                 return currentWallet.getExpenses();
             }
-            logger.error("🔴 Wallet not found");
+            logger.warn("🟠 Failed to get all expenses for userId: " + userId);
             throw new WalletNotFoundException(walletId);
         }
+        logger.warn("🟠 Failed to get all expenses for userId: " + userId);
         throw new UserNotFoundException(userId);
     }
 
     // READ ONE (GET ONE)
     @Override
     public Expense getExpense(Long id) {
-        logger.info("🟢 ExpenseServiceImpl.getExpense() called");
+        logger.info("🟢 Getting expenses with id: " + id);
         return expenseRepository.findById(id).orElseThrow(() -> new ExpenseNotFound(id));
     }
 
     // UPDATE
     @Override
     public Expense updateExpense(Long userId, Long walletId, Long id, Expense expense, int categoryNum) {
-        logger.info("🟢 ExpenseServiceImpl.updateExpense() called");
+        logger.info("🟢 Updating " + expense.getDescription() + " expense for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
         if (optionalUser.isPresent()) {
@@ -108,20 +112,23 @@ public class ExpenseServiceImpl implements ExpenseService {
                     expenseToUpdate.setAmount(expense.getAmount());
                     expenseToUpdate.setWallet(expense.getWallet());
                     expenseToUpdate.setCategory(expense.getCategory());
+                    logger.info("🟢 Successfully updated " + expenseToUpdate.getDescription() + " expense for wallet " + currentWallet.getWalletName() + " under userId: " + userId);
                     return expenseRepository.save(expenseToUpdate);
                 }
+                logger.warn("🟠 Failed to update " + expense.getDescription() + " expense for userId: " + userId);
                 throw new ExpenseNotFound(id);
             }
-            logger.error("🔴 Wallet not found");
+            logger.warn("🟠 Failed to update " + expense.getDescription() + " expense for userId: " + userId);
             throw new WalletNotFoundException(walletId);
         }
+        logger.warn("🟠 Failed to update " + expense.getDescription() + " expense for userId: " + userId);
         throw new UserNotFoundException(userId);
     }
 
     // DELETE
     @Override
     public void deleteExpense(Long id) {
-        logger.info("🟢 ExpenseServiceImpl.deleteExpense() called");
+        logger.info("🟢 Deleting expense with Id: " + id);
         expenseRepository.deleteById(id);
     }
 

@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createCategory(Long userId, Category category) {
-        logger.info("🟢 CategoryServiceImpl.createCategory() called");
+        logger.info("🟢 Creating new category for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
@@ -42,62 +42,71 @@ public class CategoryServiceImpl implements CategoryService {
             category.setCategoryName(category.getCategoryName().toLowerCase());
             // Prevent creation of category with the same name
             if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
-                logger.info("🔴 CategoryServiceImpl.createCategory() failed to call");
+                logger.warn("🟠 Failed to create new category for userId: " + userId);
                 throw new CategoryAlreadyExist(category.getCategoryName());
             }
             Category newCategory = categoryRepository.save(category);
+            logger.info("🟢 Created " + category.getCategoryName() + " for userId: " + userId);
             return newCategory;
         }
+        logger.warn("🟠 Failed to create new category for userId: " + userId);
         throw new UserNotFoundException(userId);
     }
 
     @Override
     public List<Category> getAllCategory() {
-        logger.info("🟢 CategoryServiceImpl.getAllCategory() called");
+        logger.info("🟢 Getting all categories...");
         return categoryRepository.findAll();
     }
 
     @Override
     public List<Category> getAllCategoryByUser(Long userId) {
-        User currentUser = userRepository.findById(userId).get();
-        return currentUser.getCategories();
+        logger.info("🟢 Getting all categories for userId: " + userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            return currentUser.getCategories();
+        }
+        logger.warn("🟠 Failed get all categories for userId: " + userId);
+        throw new UserNotFoundException(userId);
     }
 
     @Override
     public Category updateCategory(Long userId, Long id, Category category) {
-        logger.info("🟢 CategoryServiceImpl.updateCategory() called");
+        logger.info("🟢 Updating category for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
             category.setUser(currentUser);
             category.setCategoryName(category.getCategoryName().toLowerCase());
             if (checkIfCategoryAlreadyExist(currentUser.getCategories(), category.getCategoryName())) {
+                logger.warn("🟠 Failed to update category for userId: " + userId);
                 throw new CategoryAlreadyExist(category.getCategoryName());
             }
             Optional<Category> optionalCategory = categoryRepository.findById(id);
             if (optionalCategory.isPresent()) {
                 Category categoryToUpdate = optionalCategory.get();
                 categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
-                logger.error("🔴 CategoryServiceImpl.updateCategory() failed");
-
+                logger.info("🟢 Succesfully updated "+ categoryToUpdate.getCategoryName() + " for userId: " + userId );
                 return categoryRepository.save(categoryToUpdate);
-
             }
-            logger.error("🔴 CategoryServiceImpl.updateCategory() failed");
+            logger.warn("🟠 Failed to update category for userId: " + userId);
             throw new CategoryNotFound(id);
         }
+        logger.warn("🟠 Failed to update category for userId: " + userId);
         throw new UserNotFoundException(id);
     }
 
     @Override
     public void deleteCategory(Long userId, int categoryNum) {
-        logger.info("🟢 CategoryServiceImpl.deleteCategory() called");
+        logger.info("🟢 Deleting categoryNum: " + categoryNum + " for userId: " + userId);
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
             Category categoryToDelete = findCategoryByCategoryNum(currentUser.getCategories(), categoryNum);
             categoryRepository.deleteById(categoryToDelete.getId());
         } else {
+            logger.warn("🟠 Failed to delete category for userId: " + userId);
             throw new UserNotFoundException(userId);
         }
     }
