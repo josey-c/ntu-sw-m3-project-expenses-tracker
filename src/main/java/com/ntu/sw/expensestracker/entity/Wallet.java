@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class Wallet {
     private long walletId;
 
     @Column(name = "wallet_name")
+    @NotBlank(message = "Wallet name is mandatory")
     private String walletName;
 
     @JsonBackReference
