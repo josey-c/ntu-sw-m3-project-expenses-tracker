@@ -41,17 +41,18 @@ public class UserServiceImpl implements UserService{
     //create 1 user
     @Override
     public User createUser(User user){
-        logger.info("🟢 UserServiceImpl.createUser() called");
+        logger.info("🟢 Creating a user...");
         User newUser = userRepository.save(user);
 
-
         // Add a main wallet to newly created user
+        logger.info("🟢 Creating a wallet for new user...");
         Wallet main = new Wallet("main", user);
         walletRepository.save(main);
         List<Wallet> wallets = Arrays.asList(main);
         newUser.setWallets(wallets);
 
         // Add a few categories to newly created user 
+        logger.info("🟢 Creating default categories for new user...");
         Category food = new Category("food", 1, user);
         Category transport = new Category("transport", 2, user);
         Category bills = new Category("bills", 3, user);
@@ -67,13 +68,14 @@ public class UserServiceImpl implements UserService{
     //get 1 user
     @Override
     public User getUser(Long id){
+        logger.info("🟢 Getting userId: " + id);
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()){
-            logger.info("🟢 UserServiceImpl.getUser() called");
             User foundUser = optionalUser.get();
+            logger.info("🟢 Successfully get userId: "+ id);
             return foundUser;
         } else {
-            logger.error("🔴 UserServiceImpl.getUser() failed");
+            logger.warn("🟠 Failed to get userId: "+ id);
             throw new UserNotFoundException(id);
         }
     }
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService{
     //get all users
     @Override
      public ArrayList<User> getAllUsers() {
-        logger.info("🟢 UserServiceImpl.getAllUsers() called");
+        logger.info("🟢 Getting all users...");
         List<User> allUsers = userRepository.findAll();
         return (ArrayList<User>) allUsers;
     }
@@ -89,28 +91,31 @@ public class UserServiceImpl implements UserService{
     //update user
     @Override
     public User updateUser(Long id, User user) {
+        logger.info("🟢 Updating userId: " + id);
         Optional<User> optionalUser= userRepository.findById(id);
         if (optionalUser.isPresent()) {
             logger.info("🟢 UserServiceImpl.updateUser() called");
             User userToUpdate = optionalUser.get();
             userToUpdate.setFirstName(user.getFirstName());
             userToUpdate.setEmail(user.getEmail());
+            logger.info("🟢 Successfully updated userId: " + id);
             return userRepository.save(userToUpdate);
         }
-        logger.error("🔴 UserServiceImpl.updateUser() failed");
+        logger.warn("🟠 Failed to update userId: " + id);
         throw new UserNotFoundException(id);
     }
 
     //delete user
     @Override
     public void deleteById(Long id) {
-        logger.info("🟢 UserServiceImpl.deleteById() called");
+        logger.info("🟢 Deleting userId: " + id);
         userRepository.deleteById(id);
     }
 
     //add wallet to user
     @Override
     public Wallet addWalletToUser(long id, Wallet wallet){
+        logger.info("🟢 Creating a new wallet for userId: " + id);
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             logger.info("🟢 UserServiceImpl.addWalletToUser() called");
@@ -118,9 +123,10 @@ public class UserServiceImpl implements UserService{
             wallet.setUser(selectedUser);
             String walletName = wallet.getWalletName();
             wallet.setWalletName(walletName);
+            logger.info("🟢 Successfully created wallet " + wallet.getWalletName() + " for userId: " + id);
             return walletRepository.save(wallet);
         }
-        logger.info("🔴 UserServiceImpl.addWalletToUser() failed");
+        logger.warn("🟠 Failed to create a new wallet for userId: " + id);
         throw new UserNotFoundException(id);
     }
     
