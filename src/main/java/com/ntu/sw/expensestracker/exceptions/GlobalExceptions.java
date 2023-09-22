@@ -70,7 +70,7 @@ public class GlobalExceptions {
     for (ObjectError error : validationErrors) {
       sb.append(error.getDefaultMessage() + ". ");
     }
-
+    logger.error("🔴 " + sb.toString());
     ErrorResponse errorResponse = new ErrorResponse(sb.toString(), LocalDateTime.now());
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 

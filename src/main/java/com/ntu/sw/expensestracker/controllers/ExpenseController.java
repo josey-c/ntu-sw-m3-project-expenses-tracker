@@ -2,6 +2,8 @@ package com.ntu.sw.expensestracker.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,7 @@ public class ExpenseController {
 
     // CREATE
     @PostMapping("users/{userId}/wallets/{walletId}/expenses")
-    public ResponseEntity<Expense> createExpense(@PathVariable Long userId, @PathVariable Long walletId,
-            @RequestBody RequestBodyTempData data) {
+    public ResponseEntity<Expense> createExpense(@PathVariable Long userId, @PathVariable Long walletId, @Valid @RequestBody RequestBodyTempData data) {
         System.out.println("JSON recieved! 🟢" + data.getExpense());
         Expense newExpense = expenseService.createExpense(userId, walletId, data.getCategoryNum(), data.getExpense());
         return new ResponseEntity<>(newExpense, HttpStatus.CREATED);
@@ -57,7 +58,7 @@ public class ExpenseController {
 
     // UPDATE
     @PutMapping("users/{userId}/wallets/{walletId}/expenses/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id, @RequestBody RequestBodyTempData data) {
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id, @Valid @RequestBody RequestBodyTempData data) {
         Expense updatedExpense = expenseService.updateExpense(userId, walletId, id, data.getExpense(), data.getCategoryNum());
         return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
@@ -72,7 +73,9 @@ public class ExpenseController {
 }
 
 class RequestBodyTempData {
+    @Valid 
     Expense expense;
+
     int categoryNum;
 
     public Expense getExpense() {

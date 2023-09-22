@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 @Component
 @Getter
@@ -30,6 +31,7 @@ public class User {
     private Long id;
 
     @Column(name = "first_name")
+    @Size(min = 3, max =30, message = "First Name must be between 3 and 30 characters.")
     private String firstName;
 
     @Column(name = "email")

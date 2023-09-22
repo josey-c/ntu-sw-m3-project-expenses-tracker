@@ -2,6 +2,8 @@ package com.ntu.sw.expensestracker.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class CategoryController {
     }
 
     @PostMapping("users/{userId}/categories") 
-    public ResponseEntity<Category> createCategory(@PathVariable Long userId, @RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@PathVariable Long userId, @Valid @RequestBody Category category) {
         Category newCategory = categoryService.createCategory(userId, category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
@@ -45,7 +47,7 @@ public class CategoryController {
     }
 
     @PutMapping("users/{userId}/categories/{id}")
-    public ResponseEntity<Category> editCategory(@PathVariable Long userId, @PathVariable Long id, @RequestBody Category category) {
+    public ResponseEntity<Category> editCategory(@PathVariable Long userId, @PathVariable Long id, @Valid @RequestBody Category category) {
         Category editCategory = categoryService.updateCategory(userId, id, category);
         return new ResponseEntity<Category>(editCategory, HttpStatus.OK);
     }

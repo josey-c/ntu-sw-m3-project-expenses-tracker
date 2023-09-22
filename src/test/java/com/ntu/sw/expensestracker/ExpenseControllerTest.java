@@ -33,33 +33,6 @@ public class ExpenseControllerTest {
 
     @Test
     public void createExpenseTest() throws Exception {
-        
-        // Wallet wallet = new Wallet("main");
-        // String newWalletAsJSON = objectMapper.writeValueAsString(wallet);
-
-        // // Request to create wallet for user
-        // RequestBuilder request = MockMvcRequestBuilders.post("/users/1/wallets")
-        //     .contentType(MediaType.APPLICATION_JSON)
-        //     .content(newWalletAsJSON);
-
-        // mockMvc.perform(request)
-        //     .andExpect(status().isCreated())
-        //     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        //     .andExpect(jsonPath("$.walletId").value(1));
-    
-        // Category category = new Category("food");
-        // String newCategoryAsJSON = objectMapper.writeValueAsString(category);
-
-        // // Request to create category for user
-        // RequestBuilder request2 = MockMvcRequestBuilders.post("/users/1/categories")
-        //     .contentType(MediaType.APPLICATION_JSON)
-        //     .content(newCategoryAsJSON);
-
-        // mockMvc.perform(request2)
-        //     .andExpect(status().isCreated())
-        //     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        //     .andExpect(jsonPath("$.categoryNum").value(1))
-        //     .andExpect(jsonPath("$.categoryName").value("food"));
 
         Expense expense = new Expense("macs", 10.0);
         RequestBodyTempData data = new RequestBodyTempData(expense, 1);
@@ -90,16 +63,16 @@ public class ExpenseControllerTest {
 
     @Test
     public void updateExpenseTest() throws Exception {
-        Expense expense = new Expense("macs", 10.0);
-        RequestBodyTempData data = new RequestBodyTempData(expense, 1);
-        String newExpenseAsJSON= objectMapper.writeValueAsString(data);
+        // Expense expense = new Expense("macs", 10.0);
+        // RequestBodyTempData data = new RequestBodyTempData(expense, 1);
+        // String newExpenseAsJSON= objectMapper.writeValueAsString(data);
 
-        // Request to add expenses to wallet under user
-        RequestBuilder request = MockMvcRequestBuilders.post("/users/1/wallets/1/expenses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(newExpenseAsJSON);
+        // // Request to add expenses to wallet under user
+        // RequestBuilder request = MockMvcRequestBuilders.post("/users/1/wallets/1/expenses")
+        //     .contentType(MediaType.APPLICATION_JSON)
+        //     .content(newExpenseAsJSON);
 
-        mockMvc.perform(request);
+        // mockMvc.perform(request);
 
         Expense updatedExpense = new Expense("taxi", 15.0);
         RequestBodyTempData updatedData = new RequestBodyTempData(updatedExpense, 2);
