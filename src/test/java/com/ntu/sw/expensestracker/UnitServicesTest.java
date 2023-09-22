@@ -8,11 +8,18 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 
 import com.ntu.sw.expensestracker.entity.Category;
 import com.ntu.sw.expensestracker.entity.Expense;
@@ -48,6 +55,9 @@ public class UnitServicesTest {
 
     @InjectMocks
     UserServiceImpl userService;
+
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
 
     @Test
     public void createUserTest() {
@@ -92,6 +102,16 @@ public class UnitServicesTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUser(userId));
+    }
+
+    @Test
+    public void invalidCreateUserTest() {
+        User invalidUser = new User("A", "abc");
+
+        Set<ConstraintViolation<User>> violations = validator.validate(invalidUser);
+
+        assertEquals(violations.size(), 2);
+
     }
 
     // @Test

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -31,9 +33,11 @@ public class Expense {
     private LocalDate expenseDate;
 
     @Column(name = "description")
+    @Size(min = 3, max = 30, message= "Description must be between 3 and 30 characters")
     private String description;
 
     @Column(name = "amount")
+    @Positive(message = "Amount must be above 0")
     private Double amount;
 
     @JsonBackReference

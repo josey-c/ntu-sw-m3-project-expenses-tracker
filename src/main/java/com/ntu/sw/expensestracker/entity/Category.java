@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -35,6 +36,7 @@ public class Category {
     private int categoryNum;
 
     @Column(name = "category_name")
+    @Size(min = 3, max = 30, message = "Category name must be between 3 and 30 charcters")
     String categoryName;
 
     @JsonBackReference
