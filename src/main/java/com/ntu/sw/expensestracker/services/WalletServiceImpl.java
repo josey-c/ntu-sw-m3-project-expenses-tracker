@@ -27,14 +27,17 @@ public class WalletServiceImpl implements WalletService {
     private UserRepository userRepository;
     private ExpenseRepository expenseRepository;
 
+    private DeleteService deleteService;
+
     private final Logger logger = LoggerFactory.getLogger(WalletServiceImpl.class);
 
     @Autowired
     public WalletServiceImpl(WalletRepository walletRepository, UserRepository userRepository,
-            ExpenseRepository expenseRepository) {
+            ExpenseRepository expenseRepository, DeleteService deleteService) {
         this.walletRepository = walletRepository;
         this.userRepository = userRepository;
         this.expenseRepository = expenseRepository;
+        this.deleteService = deleteService;
     }
 
     // CREATE 1 wallet
@@ -99,10 +102,22 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void deleteWallet(Long id) {
-        logger.info("🟢 Deleting walletId: " + id);
-        walletRepository.deleteById(id);
+    public void deleteWallet(Long userId, Long id) {
+        logger.info("🟢 Deleting walletId: " + id + " for userId: " + userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            for (Wallet wallet : currentUser.getWallets()) {
+                if (wallet.getWalletId() == id) {
+                    deleteService.deleteAllExpenses(walletRepository.findById(id).get().getExpenses());
+                    walletRepository.deleteById(id);
+                }
+            }
+        } else {
+            throw new UserNotFoundException(userId);
+        }
     }
+    
 
     // Other methods
     private boolean checkIfWalletAlreadyExist(List<Wallet> wallets, String walletName) {

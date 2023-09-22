@@ -46,9 +46,9 @@ public class CategoryController {
         return new ResponseEntity<>(allCategoryByUser, HttpStatus.OK);
     }
 
-    @PutMapping("users/{userId}/categories/{id}")
-    public ResponseEntity<Category> editCategory(@PathVariable Long userId, @PathVariable Long id, @Valid @RequestBody Category category) {
-        Category editCategory = categoryService.updateCategory(userId, id, category);
+    @PutMapping("users/{userId}/categories/{categoryNum}")
+    public ResponseEntity<Category> editCategory(@PathVariable Long userId, @PathVariable int categoryNum, @Valid @RequestBody Category category) {
+        Category editCategory = categoryService.updateCategory(userId, categoryNum, category);
         return new ResponseEntity<Category>(editCategory, HttpStatus.OK);
     }
 

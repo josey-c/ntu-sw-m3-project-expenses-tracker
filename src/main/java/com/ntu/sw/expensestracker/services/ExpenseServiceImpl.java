@@ -129,9 +129,27 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     // DELETE
     @Override
-    public void deleteExpense(Long id) {
-        logger.info("🟢 Deleting expense with Id: " + id);
-        expenseRepository.deleteById(id);
+    // public void deleteExpense(Long id) {
+    //     logger.info("🟢 Deleting expense with Id: " + id);
+    //     expenseRepository.deleteById(id);
+    // }
+    public void deleteExpense(Long userId, Long walletId, Long id) {
+        logger.info("🟢 Deleting expense with Id: " + id + " for userId: " + userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User currentUser = optionalUser.get();
+            Wallet currentWallet = CheckIfWalletIsUnderUser(currentUser.getWallets(), walletId);
+            Optional<Expense> optionalExpense = expenseRepository.findById(id);
+            if (optionalExpense.isPresent()) {
+                Expense expenseToDelete = optionalExpense.get();
+                if (expenseToDelete.getWallet().equals(currentWallet)) {
+                    expenseRepository.deleteById(id);
+                }
+            }
+            throw new ExpenseNotFound(id);
+        } else {
+            throw new UserNotFoundException(id);
+        }
     }
 
     //Helper function to check if category exist 

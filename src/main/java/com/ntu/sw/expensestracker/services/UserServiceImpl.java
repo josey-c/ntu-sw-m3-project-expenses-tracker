@@ -27,15 +27,18 @@ public class UserServiceImpl implements UserService{
     private WalletRepository walletRepository;
     private CategoryRepository categoryRepository;
 
+    private DeleteService deleteService;
+
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
     @Autowired
-    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository, CategoryRepository categoryRepository){
+    public UserServiceImpl (UserRepository userRepository, WalletRepository walletRepository, CategoryRepository categoryRepository, DeleteService deleteService){
         this.userRepository= userRepository;
         this.walletRepository = walletRepository;
         this.categoryRepository = categoryRepository;
+        this.deleteService = deleteService;
     }
     
     //create 1 user
@@ -109,7 +112,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteById(Long id) {
         logger.info("🟢 Deleting userId: " + id);
-        userRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User userToDelete = optionalUser.get();
+            logger.info("🟢 Deleting all wallets and expenses for userId: " + id);
+            deleteService.deleteAllWallets(userToDelete.getWallets());
+            logger.info("🟢 Deleteing all categories for userId: " + id);
+            deleteService.deleteAllCategories(userToDelete.getCategories());
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException(id);
+        }
     }
 
     //add wallet to user

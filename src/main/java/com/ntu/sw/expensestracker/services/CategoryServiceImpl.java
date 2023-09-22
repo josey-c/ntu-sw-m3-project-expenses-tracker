@@ -72,9 +72,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Long userId, Long id, Category category) {
+    public Category updateCategory(Long userId, int categoryNum, Category category) {
         logger.info("🟢 Updating category for userId: " + userId);
-        Optional<User> optionalUser = userRepository.findById(id);
+        Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User currentUser = optionalUser.get();
             category.setUser(currentUser);
@@ -83,18 +83,23 @@ public class CategoryServiceImpl implements CategoryService {
                 logger.warn("🟠 Failed to update category for userId: " + userId);
                 throw new CategoryAlreadyExist(category.getCategoryName());
             }
-            Optional<Category> optionalCategory = categoryRepository.findById(id);
-            if (optionalCategory.isPresent()) {
-                Category categoryToUpdate = optionalCategory.get();
-                categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
-                logger.info("🟢 Succesfully updated "+ categoryToUpdate.getCategoryName() + " for userId: " + userId );
-                return categoryRepository.save(categoryToUpdate);
-            }
-            logger.warn("🟠 Failed to update category for userId: " + userId);
-            throw new CategoryNotFound(id);
+
+            Category categoryToUpdate = findCategoryByCategoryNum(currentUser.getCategories(), categoryNum);
+            categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
+            logger.info("🟢 Succesfully updated "+ categoryToUpdate.getCategoryName() + " for userId: " + userId );
+            return categoryRepository.save(categoryToUpdate);
+
+            // if (optionalCategory.isPresent()) {
+            //     Category categoryToUpdate = optionalCategory.get();
+            //     categoryToUpdate.setCategoryName(category.getCategoryName().toLowerCase());
+            //     logger.info("🟢 Succesfully updated "+ categoryToUpdate.getCategoryName() + " for userId: " + userId );
+            //     return categoryRepository.save(categoryToUpdate);
+            // }
+            // logger.warn("🟠 Failed to update category for userId: " + userId);
+            // throw new CategoryNotFound(id);
         }
         logger.warn("🟠 Failed to update category for userId: " + userId);
-        throw new UserNotFoundException(id);
+        throw new UserNotFoundException(userId);
     }
 
     @Override
