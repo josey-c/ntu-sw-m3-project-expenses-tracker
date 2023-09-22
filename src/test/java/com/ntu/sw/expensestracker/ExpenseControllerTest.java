@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ntu.sw.expensestracker.entity.Category;
@@ -63,26 +64,16 @@ public class ExpenseControllerTest {
 
     @Test
     public void updateExpenseTest() throws Exception {
-        // Expense expense = new Expense("macs", 10.0);
-        // RequestBodyTempData data = new RequestBodyTempData(expense, 1);
-        // String newExpenseAsJSON= objectMapper.writeValueAsString(data);
-
-        // // Request to add expenses to wallet under user
-        // RequestBuilder request = MockMvcRequestBuilders.post("/users/1/wallets/1/expenses")
-        //     .contentType(MediaType.APPLICATION_JSON)
-        //     .content(newExpenseAsJSON);
-
-        // mockMvc.perform(request);
-
+ 
         Expense updatedExpense = new Expense("taxi", 15.0);
         RequestBodyTempData updatedData = new RequestBodyTempData(updatedExpense, 2);
         String updatedExpenseAsJSON= objectMapper.writeValueAsString(updatedData);
 
-        RequestBuilder request2 = MockMvcRequestBuilders.put("/users/1/wallets/1/expenses/1")
+        RequestBuilder request = MockMvcRequestBuilders.put("/users/1/wallets/1/expenses/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(updatedExpenseAsJSON);
 
-        mockMvc.perform(request2)
+        mockMvc.perform(request)
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.amount").value(15.0))
@@ -121,6 +112,22 @@ public class ExpenseControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof CategoryNotFound))
             .andExpect(result -> assertEquals("Category with categoryNum: 4 does not exist", result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void invalidCreateExpenseTest() throws Exception {
+        Expense invalidExpnese = new Expense(" ", 0.0);
+        RequestBodyTempData invalidData = new RequestBodyTempData(invalidExpnese, 1);
+        String invalidExpenseAsJSON = objectMapper.writeValueAsString(invalidData);
+
+        RequestBuilder request = MockMvcRequestBuilders.post("/users/1/wallets/1/expenses")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(invalidExpenseAsJSON);
+
+        mockMvc.perform(request)
+            .andExpect(status().isBadRequest())
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+
     }
 
 }
