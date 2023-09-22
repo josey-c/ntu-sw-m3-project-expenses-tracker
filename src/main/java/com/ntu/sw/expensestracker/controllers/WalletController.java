@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntu.sw.expensestracker.entity.Expense;
 import com.ntu.sw.expensestracker.entity.Wallet;
+import com.ntu.sw.expensestracker.services.DeleteService;
 import com.ntu.sw.expensestracker.services.WalletService;
 
 @RestController
@@ -54,9 +55,9 @@ public class WalletController {
         return new ResponseEntity<Wallet>(editWallet, HttpStatus.OK);
     }
 
-    @DeleteMapping("/wallets/{id}")
-    public ResponseEntity<HttpStatus> deleteWallet(@PathVariable Long id) {
-        walletService.deleteWallet(id);
+    @DeleteMapping("users/{userId}/wallets/{id}")
+    public ResponseEntity<HttpStatus> deleteWallet(@PathVariable Long userId, @PathVariable Long id) {
+        walletService.deleteWallet(userId, id);
         return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
     }
 

@@ -21,6 +21,6 @@ public interface ExpenseService {
     Expense updateExpense(Long userId, Long walletId, Long id, Expense expense, int categoryNum);
 
     // DELETE
-    void deleteExpense(Long id);
+    void deleteExpense(Long userId, Long walletId, Long id);
 
 }

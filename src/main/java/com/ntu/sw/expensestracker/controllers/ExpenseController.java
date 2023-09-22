@@ -64,9 +64,9 @@ public class ExpenseController {
     }
 
     // DELETE
-    @DeleteMapping("/expenses/{id}")
-    public ResponseEntity<HttpStatus> deleteExpense(@PathVariable Long id) {
-        expenseService.deleteExpense(id);
+    @DeleteMapping("users/{userId}/wallets/{walletId}/expenses/{id}")
+    public ResponseEntity<HttpStatus> deleteExpense(@PathVariable Long userId, @PathVariable Long walletId, @PathVariable Long id) {
+        expenseService.deleteExpense(userId, walletId, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

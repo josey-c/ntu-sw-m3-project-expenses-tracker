@@ -8,6 +8,6 @@ public interface CategoryService {
     Category createCategory(Long userId, Category category);
     List<Category> getAllCategory();
     List<Category> getAllCategoryByUser(Long userId);
-    Category updateCategory(Long userId, Long id, Category category);
+    Category updateCategory(Long userId, int categoryNum, Category category);
     void deleteCategory(Long userId, int categoryNum);
 }
