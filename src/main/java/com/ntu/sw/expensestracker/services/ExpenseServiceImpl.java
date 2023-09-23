@@ -145,8 +145,9 @@ public class ExpenseServiceImpl implements ExpenseService {
                 if (expenseToDelete.getWallet().equals(currentWallet)) {
                     expenseRepository.deleteById(id);
                 }
+            } else {
+                throw new ExpenseNotFound(id);
             }
-            throw new ExpenseNotFound(id);
         } else {
             throw new UserNotFoundException(id);
         }
