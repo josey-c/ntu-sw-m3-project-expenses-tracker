@@ -50,7 +50,7 @@ public class WalletController {
 
     @PutMapping("users/{userId}/wallets/{id}")
     public ResponseEntity<Wallet> editWallet(@PathVariable Long userId, @PathVariable Long id,
-            @RequestBody Wallet wallet) {
+            @Valid @RequestBody Wallet wallet) {
         Wallet editWallet = walletService.updateWallet(userId, id, wallet);
         return new ResponseEntity<Wallet>(editWallet, HttpStatus.OK);
     }
