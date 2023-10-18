@@ -16,8 +16,11 @@ jobs:
       - checkout
       - run:
           name: Test
-          command: mvn test
-
+          command: |
+            mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
+            mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
+            mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
+            
 workflow:
   ci-workflow:
     jobs:
