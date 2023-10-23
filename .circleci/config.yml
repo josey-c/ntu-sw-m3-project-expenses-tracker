@@ -45,7 +45,7 @@ jobs:
       - setup_remote_docker
       - docker/check
       - run: docker build -t $IMAGE_NAME .
-      - snyk/scan:
+      - snyk/scan: clumped/project-space
           docker-image-name: $IMAGE_NAME
   # deploy:
   #   docker:
