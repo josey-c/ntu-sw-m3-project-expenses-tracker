@@ -39,13 +39,13 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     environment:
-      IMAGE_NAME:
+      IMAGE_NAME: clumped/project-space
     steps:
       - checkout
       - setup_remote_docker
       - docker/check
       - run: docker build -t $IMAGE_NAME .
-      - snyk/scan:
+      - snyk/scan: 
           docker-image-name: $IMAGE_NAME
   # deploy:
   #   docker:
@@ -63,7 +63,7 @@ jobs:
   #       # The push command pushes the image to heroku's container registry
   #       # The release command deploys the image from heroku's container registry
 
-workflow:
+workflows:
   ci-workflow:
     jobs:
       - build:
@@ -91,6 +91,6 @@ workflow:
       - build-and-push:
           requires:
             - test
-      - deploy:
-          requires:
-            - build-and-push
+      # - deploy:
+      #     requires:
+      #       - build-and-push
