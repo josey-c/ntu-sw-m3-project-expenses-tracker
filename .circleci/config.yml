@@ -63,7 +63,7 @@ jobs:
   #       # The push command pushes the image to heroku's container registry
   #       # The release command deploys the image from heroku's container registry
 
-workflow:
+workflows:
   ci-workflow:
     jobs:
       - build:
@@ -91,6 +91,6 @@ workflow:
       - build-and-push:
           requires:
             - test
-      - deploy:
-          requires:
-            - build-and-push
+      # - deploy:
+      #     requires:
+      #       - build-and-push
