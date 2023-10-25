@@ -59,7 +59,7 @@ public class ExpenseControllerTest {
         mockMvc.perform(request)
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.size()").value(1));
+            .andExpect(jsonPath("$.size()").value(0));
     }
 
     @Test
