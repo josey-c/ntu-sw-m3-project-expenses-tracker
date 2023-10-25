@@ -87,7 +87,7 @@ workflows:
           requires:
             - build
       - build-and-push:
-          reqiures:
+          requires:
             - test
       - scan:
           requires:
