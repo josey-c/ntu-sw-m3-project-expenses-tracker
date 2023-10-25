@@ -21,8 +21,8 @@ jobs:
           name: Test
           command: |
             mvn test -Dtest="ExpenseControllerTest#createExpenseTest"
-            mvn test -Dtest="ExpenseControllerTest#getAllExpenseByWalletTest"
-            mvn test -Dtest="ExpenseControllerTest#updateExpenseTest"
+            mvn test -Dtest="ExpenseControllerTest#createExpenseWithWalletNotFoundExceptionTest"
+            mvn test -Dtest="ExpenseControllerTest#invalidCreateExpenseTest"
   build-and-push:
     executor: docker/docker
     steps:
