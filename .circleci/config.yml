@@ -88,6 +88,7 @@ workflows:
       - scan:
           requires:
             - build
+            - test
       - build-and-push:
           requires:
             - test
