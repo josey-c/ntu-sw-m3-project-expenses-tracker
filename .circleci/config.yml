@@ -73,6 +73,10 @@ workflows:
       - test:
           requires:
             - build
+      - scan:
+          requires:
+            - build
+
   cicd-workflow:
     jobs:
       - build:
@@ -80,6 +84,12 @@ workflows:
             branches:
               only: release
       - test:
+          requires:
+            - build
+      - build-and-push:
+          reqiures:
+            - test
+      - scan:
           requires:
             - build
       # - deploy:
