@@ -31,10 +31,8 @@ jobs:
       - docker/check
       - docker/build:
           image: clumped/project-space
-          tag: v1.0.0
       - docker/push:
           image: clumped/project-space
-          tag: v1.0.0
   scan:
     docker:
       - image: cimg/openjdk:17.0
