@@ -8,10 +8,6 @@ COPY .mvn .mvn
 COPY mvnw ./
 COPY pom.xml ./
 COPY src ./src
-COPY target/expenses-tracker-0.0.1-SNAPSHOT.jar expenses-tracker.jar
-EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","/expenses-tracker.jar"]
 # I added this as there are issues with ./mvnw's CRLF for windows, so I had to reformat it.
 RUN apt-get update && apt-get install -y dos2unix
 RUN dos2unix ./mvnw
@@ -21,5 +17,3 @@ RUN chmod +x ./mvnw
 RUN ./mvnw install
 # Define the command to run the Spring Boot application
 CMD ["./mvnw", "spring-boot:run"]
-
-
