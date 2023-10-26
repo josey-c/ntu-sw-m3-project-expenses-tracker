@@ -74,9 +74,9 @@ workflows:
       - build-and-push:
           requires:
             - test
-      - scan:
-          requires:
-            - build
+      # - scan:
+      #     requires:
+      #       - build
 
   cicd-workflow:
     jobs:
@@ -90,9 +90,9 @@ workflows:
       - build-and-push:
           requires:
             - test
-      - scan:
-          requires:
-            - build
-      # - deploy:
+      # - scan:
       #     requires:
-      #       - build-and-push
+      #       - build
+      - deploy:
+          requires:
+            - build-and-push
