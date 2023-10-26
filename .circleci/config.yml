@@ -93,6 +93,6 @@ workflows:
       - scan:
           requires:
             - build
-      # - deploy:
-      #     requires:
-      #       - build-and-push
+      - deploy:
+          requires:
+            - build-and-push
