@@ -56,8 +56,9 @@ jobs:
           name: Heroku Container Push # the name of the group of commands we are running
           command: |
             heroku container:login
-            heroku container:push web -a ntu-proj-expenses-tracker-test # Change to ntu-project-expenses-tracker once confirm to deploy
-            heroku container:release web -a ntu-proj-expenses-tracker-test # Change to ntu-project-expenses-tracker once confirm to deploy
+            heroku container:push web -a ntu-project-expenses-tracker 
+            heroku container:release web -a ntu-project-expenses-tracker
+          # Change to ntu-project-expenses-tracker once confirm to deploy
         # The push command pushes the image to heroku's container registry
         # The release command deploys the image from heroku's container registry
 
@@ -71,12 +72,12 @@ workflows:
       - test:
           requires:
             - build
-      - build-and-push:
-          requires:
-            - test
       # - scan:
       #     requires:
       #       - build
+      - build-and-push:
+          requires:
+            - test
 
   cicd-workflow:
     jobs:
