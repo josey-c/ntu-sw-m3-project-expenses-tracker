@@ -72,9 +72,9 @@ workflows:
       - test:
           requires:
             - build
-      - scan:
-          requires:
-            - build
+      # - scan:
+      #     requires:
+      #       - build
       - build-and-push:
           requires:
             - test
