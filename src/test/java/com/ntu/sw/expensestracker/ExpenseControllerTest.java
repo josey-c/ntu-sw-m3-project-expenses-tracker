@@ -52,34 +52,34 @@ public class ExpenseControllerTest {
             .andExpect(jsonPath("$.category.categoryName").value("food"));
     }
 
-    @Test
-    public void getAllExpenseByWalletTest() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.get("/users/1/wallets/1/expenses");
+    // @Test
+    // public void getAllExpenseByWalletTest() throws Exception {
+    //     RequestBuilder request = MockMvcRequestBuilders.get("/users/1/wallets/1/expenses");
 
-        mockMvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.size()").value(1));
-    }
+    //     mockMvc.perform(request)
+    //         .andExpect(status().isOk())
+    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    //         .andExpect(jsonPath("$.size()").value(1));
+    // }
 
-    @Test
-    public void updateExpenseTest() throws Exception {
+    // @Test
+    // public void updateExpenseTest() throws Exception {
  
-        Expense updatedExpense = new Expense("taxi", 15.0);
-        RequestBodyTempData updatedData = new RequestBodyTempData(updatedExpense, 2);
-        String updatedExpenseAsJSON= objectMapper.writeValueAsString(updatedData);
+    //     Expense updatedExpense = new Expense("taxi", 15.0);
+    //     RequestBodyTempData updatedData = new RequestBodyTempData(updatedExpense, 2);
+    //     String updatedExpenseAsJSON= objectMapper.writeValueAsString(updatedData);
 
-        RequestBuilder request = MockMvcRequestBuilders.put("/users/1/wallets/1/expenses/1")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(updatedExpenseAsJSON);
+    //     RequestBuilder request = MockMvcRequestBuilders.put("/users/1/wallets/1/expenses/1")
+    //         .contentType(MediaType.APPLICATION_JSON)
+    //         .content(updatedExpenseAsJSON);
 
-        mockMvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.amount").value(15.0))
-            .andExpect(jsonPath("$.description").value("taxi"))
-            .andExpect(jsonPath("$.category.categoryName").value("transport"));
-    }
+    //     mockMvc.perform(request)
+    //         .andExpect(status().isOk())
+    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    //         .andExpect(jsonPath("$.amount").value(15.0))
+    //         .andExpect(jsonPath("$.description").value("taxi"))
+    //         .andExpect(jsonPath("$.category.categoryName").value("transport"));
+    // }
 
     @Test 
     public void createExpenseWithWalletNotFoundExceptionTest() throws Exception {

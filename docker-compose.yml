@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  app:
+    container_name: h2_app    
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "8088:8080"
